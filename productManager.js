@@ -56,10 +56,32 @@ class ProductManager {
   getProductById(productId) {
     const product = this.products.find((product) => product.id === productId);
     if (!product) {
-      console.error("Not found");
-      return null;
+      throw new Error("Product not found.");
     }
     return product;
+  }
+
+  updateProduct(productId, updatedFields) {
+    const productIndex = this.products.findIndex(
+      (product) => product.id === productId
+    );
+    if (productIndex === -1) {
+      throw new Error("Product not found.");
+    }
+
+    const updatedProduct = { ...this.products[productIndex], ...updatedFields };
+    this.products[productIndex] = updatedProduct;
+  }
+
+  deleteProduct(productId) {
+    const productIndex = this.products.findIndex(
+      (product) => product.id === productId
+    );
+    if (productIndex === -1) {
+      throw new Error("Product not found.");
+    }
+
+    this.products.splice(productIndex, 1);
   }
 }
 
@@ -82,39 +104,21 @@ productManager.addProduct(
 // Obtener productos después de agregar uno
 console.log(productManager.getProducts());
 
-// Intentar agregar un producto sin completar todos los campos (debe arrojar un error)
-try {
-  productManager.addProduct(
-    "producto incompleto",
-    "",
-    150,
-    "Sin imagen",
-    "xyz456",
-    10
-  );
-} catch (error) {
-  console.error(error.message);
-}
-
-// Intentar agregar un producto con el mismo código (debe arrojar un error)
-try {
-  productManager.addProduct(
-    "producto repetido",
-    "Este es otro producto repetido",
-    150,
-    "Sin imagen",
-    "abc123",
-    10
-  );
-} catch (error) {
-  console.error(error.message);
-}
-
-// Obtener un producto por su ID (debe arrojar un error en la consola)
-console.log(productManager.getProductById(2));
-
 // Obtener un producto por su ID (debe devolver el producto agregado anteriormente)
 const foundProduct = productManager.getProductById(1);
-if (foundProduct) {
-  console.log(foundProduct.title);
+console.log(foundProduct);
+
+// Actualizar un producto por su ID
+productManager.updateProduct(1, { price: 250, stock: 30 });
+console.log(productManager.getProductById(1));
+
+// Intentar eliminar un producto que no existe (debe arrojar un error)
+try {
+  productManager.deleteProduct(2);
+} catch (error) {
+  console.error(error.message);
 }
+
+// Eliminar un producto por su ID
+productManager.deleteProduct(1);
+console.log(productManager.getProducts());
