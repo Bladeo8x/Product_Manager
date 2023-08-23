@@ -21,11 +21,19 @@ class ProductManager {
     return this.productCount;
   }
 
+  validateFields(title, description, price, thumbnail, code, stock) {
+    if (!title || !description || !price || !thumbnail || !code || !stock) {
+      throw new Error("All fields are mandatory.");
+    }
+  }
+
   getProducts() {
     return this.products;
   }
 
   addProduct(title, description, price, thumbnail, code, stock) {
+    this.validateFields(title, description, price, thumbnail, code, stock);
+
     const existingProduct = this.products.find(
       (product) => product.code === code
     );
@@ -48,7 +56,8 @@ class ProductManager {
   getProductById(productId) {
     const product = this.products.find((product) => product.id === productId);
     if (!product) {
-      throw new Error("Product not found.");
+      console.error("Not found");
+      return null;
     }
     return product;
   }
@@ -57,7 +66,7 @@ class ProductManager {
 // Crear instancia de ProductManager
 const productManager = new ProductManager();
 
-// Obtener productos
+// Obtener productos (debe ser un arreglo vacío)
 console.log(productManager.getProducts());
 
 // Agregar un producto
@@ -73,6 +82,20 @@ productManager.addProduct(
 // Obtener productos después de agregar uno
 console.log(productManager.getProducts());
 
+// Intentar agregar un producto sin completar todos los campos (debe arrojar un error)
+try {
+  productManager.addProduct(
+    "producto incompleto",
+    "",
+    150,
+    "Sin imagen",
+    "xyz456",
+    10
+  );
+} catch (error) {
+  console.error(error.message);
+}
+
 // Intentar agregar un producto con el mismo código (debe arrojar un error)
 try {
   productManager.addProduct(
@@ -87,16 +110,11 @@ try {
   console.error(error.message);
 }
 
-// Obtener un producto por su ID (debe arrojar un error porque no existe)
-try {
-  console.log(productManager.getProductById(2));
-} catch (error) {
-  console.error(error.message);
-}
+// Obtener un producto por su ID (debe arrojar un error en la consola)
+console.log(productManager.getProductById(2));
 
 // Obtener un producto por su ID (debe devolver el producto agregado anteriormente)
-try {
-  console.log(productManager.getProductById(1).title);
-} catch (error) {
-  console.error(error.message);
+const foundProduct = productManager.getProductById(1);
+if (foundProduct) {
+  console.log(foundProduct.title);
 }
