@@ -1,10 +1,10 @@
 const express = require("express");
+const { Product, ProductManager } = require("./productManager");
+
 const app = express();
 const port = 8080;
 
-const ProductManager = require("./productManager");
-
-const productManager = new ProductManager();
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/products", (req, res) => {
   const limit = req.query.limit;
