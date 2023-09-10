@@ -1,5 +1,14 @@
 class Product {
-  constructor(title, description, price, thumbnail, code, stock) {
+  constructor(
+    title,
+    description,
+    price,
+    thumbnail,
+    code,
+    stock,
+    category,
+    thumbnails
+  ) {
     this.id = null;
     this.title = title;
     this.description = description;
@@ -7,6 +16,8 @@ class Product {
     this.thumbnail = thumbnail;
     this.code = code;
     this.stock = stock;
+    this.category = category;
+    this.thumbnails = thumbnails || [];
   }
 }
 
@@ -21,8 +32,16 @@ class ProductManager {
     return this.productCount;
   }
 
-  validateFields(title, description, price, thumbnail, code, stock) {
-    if (!title || !description || !price || !thumbnail || !code || !stock) {
+  validateFields(title, description, price, thumbnail, code, stock, category) {
+    if (
+      !title ||
+      !description ||
+      !price ||
+      !thumbnail ||
+      !code ||
+      !stock ||
+      !category
+    ) {
       throw new Error("All fields are mandatory.");
     }
   }
@@ -31,8 +50,25 @@ class ProductManager {
     return this.products;
   }
 
-  addProduct(title, description, price, thumbnail, code, stock) {
-    this.validateFields(title, description, price, thumbnail, code, stock);
+  addProduct(
+    title,
+    description,
+    price,
+    thumbnail,
+    code,
+    stock,
+    category,
+    thumbnails
+  ) {
+    this.validateFields(
+      title,
+      description,
+      price,
+      thumbnail,
+      code,
+      stock,
+      category
+    );
 
     const existingProduct = this.products.find(
       (product) => product.code === code
@@ -47,7 +83,9 @@ class ProductManager {
       price,
       thumbnail,
       code,
-      stock
+      stock,
+      category,
+      thumbnails
     );
     product.id = this.generateId();
     this.products.push(product);
@@ -82,6 +120,13 @@ class ProductManager {
     }
 
     this.products.splice(productIndex, 1);
+  }
+}
+
+class Cart {
+  constructor() {
+    this.id = null;
+    this.products = [];
   }
 }
 
