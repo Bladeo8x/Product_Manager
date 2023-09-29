@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My E-commerce App</title>
+</head>
+<body>
+    <h1>Welcome to My E-commerce App</h1>
+    <ul>
+        {{#each products}}
+            <li>{{this.title}} - {{this.price}} USD</li>
+        {{/each}}
+    </ul>
+</body>
+</html>
